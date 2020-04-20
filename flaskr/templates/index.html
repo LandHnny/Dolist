@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/static/css/index.css" rel="stylesheet">
+    <title>index</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>{{ username }}</h1>
+        <button class="btn btn-default" onclick="window.location.href = '/newTask'">新建任务并发布</button>
+        <button class="btn btn-default" onclick="window.location.href = '/todolist'">查看待办事项</button>
+        <button class="btn btn-default" onclick="window.location.href = '/taskFeedback'">查看任务反馈</button>
+        <button class="btn btn-default" onclick="window.location.href = '/statistical'">查看统计图</button>
+        <button class="btn btn-default" onclick="window.location.href = '/'">注销登录</button>
+      </div>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>newTask</title>
+    <script>
+        function inputNull(form){
+            if(document.getElementById("deadline").value==""){
+                window.alert("您好！截止时间不能为空");
+                return false;
+            }
+            if(document.getElementById("headline").value==""){
+                window.alert("您好！标题不能为空");
+                return false;
+            }
+            if(document.getElementById("content").value==""){
+                window.alert("您好！具体内容不能为空");
+                return false;
+            }
+            
+            return ture;
+        }
+    </script>
+    <!-- <script type="text/javascript" src="/static/js/login.js"></script> -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/RL.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <form class="form-horizontal" action="/newTask" method="POST" onsubmit="return inputNull(this)">
+                    <span class="heading">新建任务并发送</span>
+                    <!-- 接收对象 -->
+                    <div class="form-group">
+                        <h4>接收对象</h4>
+                        {% for a in res %}
+                            <input type="checkbox" name="receivers" value={{a.id}} >{{a.username}}
+                        {% endfor %}
+                    </div>
+                    <!-- 截止时间 -->
+                    <div class="form-group">
+                        <h4>截止时间</h4>
+                        <input type="date" name="deadline" value="2020-04-24" id="deadline"/>
+                    </div>
+                    <!-- 标题 -->
+                    <div class="form-group">
+                        <h4>标题</h4>
+                        <input type="text" placeholder="标题" name="headline" id="headline"/>
+                    </div>
+                    <!-- 具体内容 -->
+                    <div class="form-group">
+                        <h4>具体内容</h4>
+                        <textarea cols="50" rows="20" placeholder="具体内容" name="content" id="content" style="OVERFLOW:visible"></textarea>
+                    </div>
+                    <!-- 按钮组 -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">确认并发送</button>
+                        <button type="button" class="btn btn-default" onclick="window.location.href = '/'">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

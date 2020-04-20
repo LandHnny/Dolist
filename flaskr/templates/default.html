@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Default</title>
+    <!-- <script type="text/javascript" src="/static/js/login.js"></script> -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/default.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="/static/css/RL.css"> -->
+</head>
+<body>
+    {% if w=='goodRegister' %}
+    <p class="bg-success">注册成功</p>
+    <button type="button" class="btn btn-default"
+    onclick="window.location.href = '/login'">跳转至登录页面</button>
+    {% endif %}
+    {% if w=='haveUser' %}
+    <h1 class="bg-warning">用户名已存在</h1>
+    <button type="button" class="btn btn-default"
+        onclick="window.location.href = '/register'">跳转至注册页</button>
+    {% endif %}
+    {% if w=='falseUser' %}
+    <h1 class="bg-danger">用户名与密码不匹配</h1>
+    <button type="button" class="btn btn-default"
+        onclick="window.location.href = '/login'">跳转至登录页面</button>
+    {% endif %}
+    {% if w=='noUser' %}
+    <h1 class="bg-danger">用户不存在，请检查用户名</h1>
+    <button type="button" class="btn btn-default"
+    onclick="window.location.href = '/login'">跳转至登录页面</button>
+    {% endif %}
+</body>
+</html>
