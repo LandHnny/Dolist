@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>任务跟进系统 -登录/注册</title>
+    <title>Login</title>
     <script>
-        function loNull(form){
+        function inputNull(form){
             if(document.getElementById("Uname").value==""){
                 window.alert("您好！用户名不能为空");
                 return false;
@@ -17,159 +15,34 @@
             }
             return ture;
         }
-        function reNull(form)
-        {
-            if(document.getElementById("name").value==""){
-                alert("您好！用户名不能为空");
-                return false;
-            }
-            if(document.getElementById("password").value==""){
-                alert("您好！密码不能为空");
-                return false;
-            }
-            if(document.getElementById("password_2").value!=document.getElementById("password").value){
-                alert("您好！两次密码输入不匹配");
-                return false;
-            }
-            return true;
-        }
     </script>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/nav.css">
-    <link rel="stylesheet" href="static/css/login.css">
-
-
+    <!-- <script type="text/javascript" src="/static/js/login.js"></script> -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/RL.css">
 </head>
 <body>
-    <!-- 顶部导航 -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">任务跟进系统</a>
-          </div>
-      
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li><a href="/">首页 <span class="sr-only"></span></a></li>
-              <li><a href="/newTask">创建任务 <span class="sr-only"></span></a></li>
-            </ul>
-  
-            <ul class="nav navbar-nav navbar-right nav-list">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户 <span class="caret"></span></a>
-                  <ul class="dropdown-menu admin-list">
-                    <li><a href="/todolist" op="shop">代办事项</a></li>
-                    <li><a href="/taskFeedback" op="shop">任务反馈</a></li>
-                    <li><a href="logout" op="food">退出</a></li>
-                  </ul>
-                </li>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
-    <!-- 顶部导航 -->
-    <!-- 内容界面 -->
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="text col-md-offset-1 col-md-3">
-                </div>
-                <div class="text col-md-offset-3 col-md-4">
-                    <!-- 面板 -->
-                    <div class="panel">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <!-- 登录 -->
-                                <div class="login">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="h3">登录账号</div>
-                                        </div>
-                                        <div class="row">
-                                            <form class="form-horizontal" action="/login" method="POST" onsubmit="return loNull(this)">
-                                                <div class="form-group">
-                                                    <label for="inputEmail3" class="col-sm-2 control-label">账号</label>
-                                                    <div class="col-sm-10">
-                                                    <input type="txt" class="form-control" id="Uname" placeholder="用户名" name="name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
-                                                    <div class="col-sm-10">
-                                                    <input type="password" class="form-control" id="Upassword" placeholder="请输入密码..." name="password">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-3 col-sm-7">
-                                                    <button type="submit" class="btn btn-default btn-sub" id="btn-login">登录</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>    
-                                    </div>
-                                </div>
-                                <!-- 登录 -->
-                            </div>
-                            <div class="row">
-                                <!-- 注册 -->
-                                <div class="register">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="h3">注册账号</div>
-                                        </div>
-                                        <div class="row">
-                                            <form class="form-horizontal" action="/register" method="POST" onsubmit="return reNull(this)">
-                                                <div class="form-group">
-                                                    <label for="re-account" class="col-sm-3 control-label">账号</label>
-                                                    <div class="col-sm-9">
-                                                    <input type="txt" class="form-control" id="name" placeholder="用户名" name="name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="re-password" class="col-sm-3 control-label">密码</label>
-                                                    <div class="col-sm-9">
-                                                    <input type="password" class="form-control" id="password" placeholder="请输入密码" name="password"> 
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="re-rpassword" class="col-sm-3 control-label">重复密码</label>
-                                                    <div class="col-sm-9">
-                                                            <input type="password" class="form-control" id="password_2" placeholder="重复输入密码">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-3 col-sm-7">
-                                                    <button type="submit" class="btn btn-default btn-sub" id="btn-re">注册</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 注册 -->
-                            </div>
-                        </div>
-                        <div class="panel-choose">
-                                <span class="new-account"><a href="#" id="btn_newUser">新用户</a></span>        
-                        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <form class="form-horizontal" action="/login" method="POST" onsubmit="return inputNull(this)">
+                    <span class="heading">用户登录</span>
+                    <!-- 用户名 -->
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="Uname" placeholder="用户名" name="name">
                     </div>
-                    <!-- 面板 -->
-                </div>
-            </div>        
+                    <!-- 密码 -->
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="Upassword" placeholder="密 码" name="password">
+                    </div>
+                    <!-- 按钮组 -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">登录</button>
+                        <button type="button" class="btn btn-default"
+                         onclick="window.location.href = '/register'">注册</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <!-- js -->
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/login.js"></script>
-    <!-- js -->
 </body>
 </html>

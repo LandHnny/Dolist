@@ -4,18 +4,9 @@
     padding: 0;
     margin: 0;
 }
-
-
-
-
-
 .carousel img{
     width: 100%;
 }
-
-
-
-
 /* 尾部 */
 .footer{
     background: url(#) no-repeat;
@@ -37,11 +28,3 @@
 .footer>div>ul>li>p {
     font-size: 13px;
 }
-
-
-
-
-
-
-
-

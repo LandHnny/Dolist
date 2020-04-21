@@ -80,33 +80,31 @@ def newTask():
 def deleteTask():
     u_id = session.get("userid")
     t_id = request.form.get('testId')
-    task = Task.query.filter(sender_id==uId,id==t_id).first()
+    re_id = request.form.get('reid')
+    task = Task.query.filter(Task.sender_id==u_id,Task.id==t_id).first()
     if task:
-        results = User_task.query.filter(task_id==t_id).all()
+        results = User_task.query.filter(User_task.task_id==t_id,User_task.receiver_id==re_id).first()
         db.session.delete(results)
         db.session.delete(task)
         db.session.commit()
-        return "任务成功删除"
+        return redirect(url_for('taskFeedback'))
     else:
-        return "任务不存在"
+        return redirect(url_for('taskFeedback'))
 
 # 修改任务的预完成时间
 @app.route('/modifyET',methods=['POST','GET'])
 def modifyET():
-    if request.method == 'GET':
-        return render_template("modifyET.html")
-    else:
-        et = request.form.getlist('estimated_time')
-        t_id = request.form.get('testId')
-        u_id = session.get('userid')
-        user_task = User_task.query.filter(task_id==t_id,receiver_id==u_id).first()
-        user_task.estimated_time = et
-        db.session.commit()
-        return redirect(url_for('index'))
+    et = request.form.getlist('estimated_time')
+    t_id = request.form.get('testId')
+    u_id = session.get('userid')
+    user_task = User_task.query.filter(User_task.task_id==int(t_id),User_task.receiver_id==u_id).first()
+    user_task.estimated_time = et
+    db.session.commit()
+    return redirect(url_for('todolist2'))
 
 # 查看待办事项
-@app.route('/todolist')
-def todolist():
+@app.route('/todolist2')
+def todolist2():
     t = []
     u_id = session.get('userid')
     ut = User_task.query.filter(User_task.receiver_id==u_id).all()
@@ -117,73 +115,119 @@ def todolist():
         else:
             # k = k+1
             task = Task.query.filter(Task.id==r.task_id).first()
+            sender = User.query.filter(User.id==task.sender_id).first()
             i = {}
             i['id'] = task.id
             i['headline'] = task.headline
             i['content'] = task.content
             i['deadline'] = task.deadline.strftime('%Y-%m-%d')
-            i['est'] = r.estimated_time
+            i['createTime'] = task.creation_time.strftime('%Y-%m-%d')
+            i['sender'] = sender.username
+            est = r.estimated_time
+            if est:
+                i['est'] = est.strftime('%Y-%m-%d')
+            else:
+                i['est'] = est
             t.append(i)
+    return render_template("mission.html",t=t)
+
+# 查看待办事项
+@app.route('/todolist1')
+def todolist1():
+    t = []
+    u_id = session.get('userid')
+    ut = User_task.query.filter(User_task.receiver_id==u_id).all()
+    # k = 0
+    for r in ut:
+        if r.finish_time:
+            continue
+        else:
+            # k = k+1
+            task = Task.query.filter(Task.id==r.task_id).first()
+            if int(task.deadline.strftime('%Y%m%d'))<=int(datetime.now().strftime('%Y%m%d')):
+                sender = User.query.filter(User.id==task.sender_id).first()
+                i = {}
+                i['id'] = task.id
+                i['headline'] = task.headline
+                i['content'] = task.content
+                i['deadline'] = task.deadline.strftime('%Y-%m-%d')
+                i['createTime'] = task.creation_time.strftime('%Y-%m-%d')
+                i['sender'] = sender.username
+                est = r.estimated_time
+                if est:
+                    i['est'] = est.strftime('%Y-%m-%d')
+                else:
+                    i['est'] = est
+                t.append(i)
     return render_template("mission.html",t=t)
 
 # 查看任务反馈
 @app.route('/taskFeedback')
 def taskFeedback():
-    t = []
+    res = []
     se_id = session.get('userid')
-    user_task = User_task.query.filter(User_task.sender_id==se_id).all()
+    task = Task.query.filter(Task.sender_id==se_id).all()
     # i = 0
-    for ut in user_task:
+    for t in task:
         # i = i+1
-        task = Task.query.filter(Task.id==ut.task_id).first()
-        user = User.query.filter(User.id==ut.receiver_id).first()
-        k = {}
-        k['id'] = task.id
-        k['headline'] = task.headline
-        k['content'] = task.content
-        k['deadline'] = task.deadline.strftime('%Y-%m-%d')
-        k['est'] = ut.estimated_time.strftime('%Y-%m-%d')
-        k['re'] = user.username
-        k['ft'] = ut.finish_time
-        t.append(k)
-    return render_template("taskFeedback.html",t=t)
+        user_task = User_task.query.filter(User_task.task_id==t.id).all()
+        for ut in user_task:
+            user = User.query.filter(User.id==ut.receiver_id).first()
+            k = {}
+            k['reid'] = user.id
+            k['id'] = t.id
+            k['headline'] = t.headline
+            k['content'] = t.content
+            k['deadline'] = t.deadline.strftime('%Y-%m-%d')
+            k['receiver'] = user.username
+            k['createTime'] = t.creation_time.strftime('%Y-%m-%d')
+            est = ut.estimated_time
+            if est:
+                k['est'] = est.strftime('%Y-%m-%d')
+            else:
+                k['est'] = est
+            ft = ut.finish_time
+            if ft:
+                k['finishTime'] = ft.strftime('%Y-%m-%d')
+            else:
+                k['finishTime'] = ft
+            res.append(k)
+    return render_template("taskFeedback.html",t=res)
 
 # 统计图
 @app.route('/statistic',methods=['POST','GET'])
 def statistic():
-    if request.method == 'GET':
-        return render_template("statistic.html")
-    else:
-        # 发送任务人的姓名,每个人给自己发送任务的数量
-        users = []
-        number = [] 
-        res = {
-            "users":[],
-            "number":[]
+    # 发送任务人的姓名,每个人给自己发送任务的数量
+    users = []
+    number = [] 
+    res = []
+    u_id = session.get('userid')
+    user_task = User_task.query.filter(User_task.receiver_id==u_id).all()
+    for ut in user_task:
+        task = Task.query.filter(Task.id==ut.task_id).first()
+        user = User.query.filter(User.id==task.sender_id).first()
+        if user.username in users:
+            idx = users.index(user.username)
+            number[idx] =  number[idx]+1
+        else:
+            number.append(1)
+            users.append(user.username)
+    for i in range(0,len(number)):
+        for j in range(0,len(number)):
+            if number[i]>number[j]:
+                temp = number[i]
+                number[i]=number[j]
+                number[j]=temp
+                temp2=users[i]
+                users[i]=users[j]
+                users[j]=temp2
+    for i in range(0,len(users)):
+        r={
+            "name":users[i],
+            "num":number[i]
         }
-        u_id = session.get('userid')
-        user_task = User_task.query.filter(User_task.receiver_id==u_id).all()
-        for ut in user_task:
-            task = Task.query.filter(id==ut.task_id).first()
-            user = User.query.filter(id==task.sender_id).first()
-            if user.username in users:
-                idx = users.index(user.username)
-                number[idx] =  number[idx]+1
-            else:
-                number.append(1)
-                users.append(user.username)
-        for i in range(len(number)):
-            for j in range(len(number)):
-                if number[i]>number[j]:
-                    temp = number[i]
-                    number[i]=number[j]
-                    number[j]=temp
-                    temp2=users[i]
-                    users[i]=users[j]
-                    users[j]=temp2
-        res["users"]=users
-        res["number"]=number  
-        return render_template("statistic.html",res=res)
+        res.append(r)
+    return render_template("statistic.html",res=res)
 
 # 注销登录
 @app.route('/logout')
@@ -196,10 +240,10 @@ def logout():
 def finish():
     u_id = session.get("userid")
     t_id = request.form.getlist('taskid')
-    ut = User_task.query.filter(task_id==t_id,receiver_id==u_id).first()
+    ut = User_task.query.filter(User_task.task_id==t_id,User_task.receiver_id==u_id).first()
     ut.finish_time = datetime.now()
     db.session.commit()
-    return redirect(url_for('todolist'))
+    return redirect(url_for('todolist2'))
 
 # 错误页面
 @app.route('/default')
@@ -213,9 +257,10 @@ def mybefore_request():
         request.path == url_for('newTask') or \
         request.path == url_for('deleteTask') or \
         request.path == url_for('modifyET') or \
-        request.path == url_for('todolist') or \
+        request.path == url_for('todolist1') or \
+        request.path == url_for('todolist2') or \
         request.path == url_for('taskFeedback') or \
-        request.path == url_for('statistical') or \
+        request.path == url_for('statistic') or \
         request.path == url_for('logout'):
         if session.get('username'):
             pass
