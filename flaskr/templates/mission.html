@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务跟进系统 -后台管理</title>
+    <script>
+      function estbtn(form){
+          if(document.getElementById("Uname").value==""){
+              window.alert("您好！用户名不能为空");
+              return false;
+          }
+          if(document.getElementById("Upassword").value==""){
+              window.alert("您好！密码不能为空");
+              return false;
+          }
+          return ture;
+      }
+  </script>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/nav.css">
+    <link rel="stylesheet" href="static/css/backstage.css">
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">任务跟进系统</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/">首页 <span class="sr-only"></span></a></li>
+          <li><a href="/newTask">创建任务 <span class="sr-only"></span></a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right nav-list">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户 <span class="caret"></span></a>
+              <ul class="dropdown-menu admin-list">
+                <li><a href="/todolist" op="shop">代办事项</a></li>
+                <li><a href="/taskFeedback" op="shop">任务反馈</a></li>
+                <li><a href="logout" op="food">退出</a></li>
+              </ul>
+            </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <!-- 顶部导航 -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+<!-- 侧边导航栏 -->
+<div class="side-nav col-sm-2">
+  <div class="side-box">
+    <div class="container-fluid">
+      <div class="row">
+        <div>
+          <a class="btn btn-default h4" href="/statistic">统计</a>
+        </div>
+        <div>
+            <a class="btn btn-default h4" href="/todolist">代办事项</a>
+        </div>
+        <div>
+            <a class="btn btn-default h4" href="/taskFeedback">任务反馈</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 侧边导航栏 -->
+<!-- 网页内容区 -->
+<div class="side-content col-sm-10">
+  <div class="container-fluid">
+    <!-- 订单管理 -->
+    <div class="orders menu">
+      <div class="row">
+        <h3>代办事项</h3>
+      </div>
+      <div class="row order">
+        <table class="table order-table">
+          <tr>
+            <th>#</th>
+            <th>发送人</th>
+            <th>任务标题</th>
+            <th>创建时间</th>
+            <th>任务截止时间</th>
+            <th>预计完成时间</th>
+            <th>操作</th>
+          </tr>
+          {% for i in t %}
+          <tr>
+            <td>{{i.id}}</td>
+            <td>{{i.sender}}</td>
+            <td>{{i.headline}}</td>
+            <td>{{i.createTime}}</td>
+            <td>{{i.deadline}}</td>
+            <td>{{i.est}}</td>              
+            <td>
+              <button class="btn btn-default" onclick="estbtn(this)">设预完成时间</button>
+              <button class="btn btn-default more">详情</button>
+              <button class="btn btn-default" id={{i.id}}>任务完成</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>    
+      </div>
+    <!-- 网页内容区 -->
+    </div>
+  </div>
+</div>
+      </div>
+<div>
+  <form>
+    <input type="date" name="deadline" id="estTime"/>
+    <button type="submit" class="btn btn-default">确认并发送</button>
+    <button type="button" class="btn btn-default" onclick="window.location.href = '/'">取消</button>
+  </form>
+  
+</div>
+  <!-- js -->
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>
+  <script>
+    function showMenu(menu)
+    {
+      $(".side-nav .side-box ."+menu).removeClass("btn-default");  
+      $(".side-nav .side-box ."+menu).addClass("btn-primary");
+      console.log(menu)
+    }
+    showMenu("event"); 
+  </script>
+  <!-- js -->
+</body>
+</html>

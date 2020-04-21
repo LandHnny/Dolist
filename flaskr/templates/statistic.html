@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务跟进系统 -后台管理</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/nav.css">
+    <link rel="stylesheet" href="static/css/backstage.css">
+    <script src="static/js/Chart.bundle.min.js"></script>
+
+
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">任务跟进系统</a>
+        </div>
+    
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/">首页 <span class="sr-only"></span></a></li>
+            <li><a href="/newTask">创建任务 <span class="sr-only"></span></a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right nav-list">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户 <span class="caret"></span></a>
+                <ul class="dropdown-menu admin-list">
+                  <li><a href="/todolist" op="shop">代办事项</a></li>
+                  <li><a href="/taskFeedback" op="shop">任务反馈</a></li>
+                  <li><a href="logout" op="food">退出</a></li>
+                </ul>
+              </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <!-- 顶部导航 -->
+
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+    <!-- 侧边导航栏 -->
+    <div class="side-nav col-sm-2">
+       <div class="side-box">
+        <div class="container-fluid">
+          <div class="row">
+            <div>
+              <a class="btn btn-default h4 statistic" op="statistic">统计</a>
+          </div>
+              <div>
+                  <a class="btn btn-default h4 event" op="event">代办事项</a>
+              </div>
+              <div>
+                  <a class="btn btn-default h4 mission" op="mission">任务反馈</a>
+              </div>
+              
+          </div>
+      </div>
+       </div>
+    </div>
+    <!-- 侧边导航栏 -->
+
+    <!-- 网页内容区 -->
+    <div class="side-content col-sm-10">
+      <div class="container-fluid">
+ <!-- 订单管理 -->
+    <div class="orders menu">
+
+        <div class="row">
+            <h3>统计</h3>
+        </div>
+
+        <div class="row">
+          <canvas id="myChart" width="100px" height="50px"></canvas>
+
+        </div>
+
+
+
+    </div>
+     
+
+  </div>
+  <!-- 网页内容区 -->
+        </div>
+
+      </div>
+    </div>
+    </div>
+
+
+
+    
+
+    <!-- js -->
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script>
+
+      function showMenu(menu)
+      {
+        $(".side-nav .side-box ."+menu).removeClass("btn-default");  
+        $(".side-nav .side-box ."+menu).addClass("btn-primary");
+        console.log(menu)
+      }
+      showMenu("statistic");
+      
+    </script>
+    <script>
+      var ctx = document.getElementById("myChart").getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ["客户1", "客户2", "客户3"],
+              datasets: [{
+                  label: '接收数量',
+                  data: [12,7,4],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255,99,132,1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+              }]
+          },
+          options: {
+            title:{
+              display:true,
+              text:"任务接收统计"
+            },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero:true
+                      }
+                  }]
+              }
+          }
+      });
+      </script>
+    <!-- js -->
+</body>
+</html>

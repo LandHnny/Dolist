@@ -34,14 +34,14 @@
                     <!-- 接收对象 -->
                     <div class="form-group">
                         <h4>接收对象</h4>
-                        {% for a in res %}
+                        {% for a in users %}
                             <input type="checkbox" name="receivers" value={{a.id}} >{{a.username}}
                         {% endfor %}
                     </div>
                     <!-- 截止时间 -->
                     <div class="form-group">
                         <h4>截止时间</h4>
-                        <input type="date" name="deadline" value="2020-04-24" id="deadline"/>
+                        <input type="date" name="deadline" id="deadline"/>
                     </div>
                     <!-- 标题 -->
                     <div class="form-group">

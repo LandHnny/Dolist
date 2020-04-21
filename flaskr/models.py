@@ -11,6 +11,7 @@ class User(db.Model):
 class Task(db.Model):
     __tablename__ = 'task'
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    sender_id = db.Column(db.Integer,nullable=False)
     headline = db.Column(db.Text,nullable=False)
     content = db.Column(db.Text,nullable=False)
     creation_time = db.Column(db.DateTime,nullable=False)
@@ -21,6 +22,5 @@ class User_task(db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     task_id = db.Column(db.Integer,nullable=False)
     receiver_id = db.Column(db.Integer,nullable=False)
-    sender_id = db.Column(db.Integer,nullable=False)
     finish_time = db.Column(db.DateTime,nullable=True)
     estimated_time = db.Column(db.DateTime,nullable=True)

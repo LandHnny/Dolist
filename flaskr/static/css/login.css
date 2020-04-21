@@ -1,0 +1,46 @@
+a{
+	color: #000;
+	text-decoration: none;
+}
+.content{
+    width:100%;
+	background-image: url(../img/success.jpg);
+	background-size: cover;
+}
+
+
+.content .panel{
+    position: relative;
+    text-align: center;
+    margin-top:20px;
+    min-height:500px;
+
+    padding-left: 30px;
+    padding-right: 30px;
+
+	background-color: #FFF;
+	box-shadow: 0px 0px 20px rgb(0, 0, 0);
+	border-radius: 10px;
+	padding-left:15px;
+}
+.content .panel .panel-choose{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+.content .panel .panel-choose>span{
+    margin-left: 20px;
+}
+
+.content .panel .login .row{
+    margin-top: 20px;
+    
+}
+.content .panel .login{
+    margin-top:50px;
+}
+
+.content .panel .btn-sub{
+    width:100%;
+}
+
