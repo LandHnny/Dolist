@@ -110,8 +110,8 @@
       </div>
 
 {% for i in t %}
-<div id="{{i.id}}" class="white_content">
-  <p>{{i.content}}</p>
+<div id="{{i.id}}" class="white_content" >
+  <p>{{i.content|safe}}</p>
 <a href = "javascript:void(0)" onclick = "closeDialog({{i.id}})">点这里关闭本窗口</a>
 </div>
 {% endfor %}

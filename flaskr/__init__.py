@@ -1,6 +1,5 @@
 #encoding: utf-8
 import os
-#redirect重定向，URL_for取得地址,render_template加入index
 from flask import Flask,url_for,redirect,render_template,session,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -120,7 +119,8 @@ def todolist2():
                 i = {}
                 i['id'] = task.id
                 i['headline'] = task.headline
-                i['content'] = task.content
+                content = '<p>'+task.content.replace('\r\n', '</p><p>')+'</p>'
+                i['content'] = content
                 i['deadline'] = task.deadline.strftime('%Y-%m-%d')
                 i['createTime'] = task.creation_time.strftime('%Y-%m-%d')
                 i['sender'] = sender.username
@@ -170,9 +170,7 @@ def taskFeedback():
     res = []
     se_id = session.get('userid')
     task = Task.query.filter(Task.sender_id==se_id).all()
-    # i = 0
     for t in task:
-        # i = i+1
         user_task = User_task.query.filter(User_task.task_id==t.id).all()
         for ut in user_task:
             user = User.query.filter(User.id==ut.receiver_id).first()

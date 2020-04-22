@@ -21,46 +21,64 @@
             return ture;
         }
     </script>
-    <!-- <script type="text/javascript" src="/static/js/login.js"></script> -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/RL.css">
+    <!-- <link rel="stylesheet" href="/static/css/RL.css"> -->
+    <link rel="stylesheet" href="/static/css/list.css">
+    <link rel="stylesheet" href="/static/css/summernote.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-offset-3 col-md-6">
+    <!-- 网页内容区 -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <h2>创建任务</h2>
+            </div>
+            <div class="row">
                 <form class="form-horizontal" action="/newTask" method="POST" onsubmit="return inputNull(this)">
-                    <span class="heading">新建任务并发送</span>
-                    <!-- 接收对象 -->
                     <div class="form-group">
                         <h4>接收对象</h4>
                         {% for a in users %}
-                            <input type="checkbox" name="receivers" value={{a.id}} >{{a.username}}
+                            <div class="checkbox-inline">
+                                <lable class="control-label"><input type="checkbox"name="receivers" value={{a.id}} />{{a.username}}</lable>
+                            </div>
                         {% endfor %}
                     </div>
-                    <!-- 截止时间 -->
-                    <div class="form-group">
-                        <h4>截止时间</h4>
-                        <input type="date" name="deadline" id="deadline"/>
+                      <div class="form-group">
+                        <input type="date" class="form-control"  placeholder="任务截止时间" name="deadline" id="deadline">
                     </div>
-                    <!-- 标题 -->
-                    <div class="form-group">
-                        <h4>标题</h4>
-                        <input type="text" placeholder="标题" name="headline" id="headline"/>
+                      <div class="form-group">
+                        <input type="text" class="form-control"  placeholder="任务标题" name="headline" id="headline">
                     </div>
-                    <!-- 具体内容 -->
-                    <div class="form-group">
-                        <h4>具体内容</h4>
-                        <textarea cols="50" rows="20" placeholder="具体内容" name="content" id="content" style="OVERFLOW:visible"></textarea>
-                    </div>
-                    <!-- 按钮组 -->
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-default">确认并发送</button>
-                        <button type="button" class="btn btn-default" onclick="window.location.href = '/'">取消</button>
-                    </div>
-                </form>
+                      <div class="form-group">
+                        <textarea id="summernote" name="content"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-info summit">提交</button>
+                            <button type="button" class="btn btn-info" onclick="window.location.href = '/'">取消</button>
+                        </div>
+
+                  </form>
             </div>
+         
         </div>
     </div>
+    <!-- 网页内容区 -->
+    
+     <!-- js -->
+     <script src="/static/js/jquery.min.js"></script>
+     <script src="/static/js/bootstrap.min.js"></script>
+     <script src="/static/js/summernote.js"></script>
+     <script>
+        $(document).ready(function() {
+            $('#summernote').summernote(
+                {
+                    height:"300px",
+                    disableDragAndDrop: true,
+                    placeholder:"任务具体内容"
+                    
+                }
+            );
+        });
+    </script>
 </body>
 </html>

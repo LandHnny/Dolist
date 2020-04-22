@@ -9,9 +9,10 @@ class Config(object):
     DRIVER = 'pymysql'
     HOST = '127.0.0.1'
     PORT = '3306'
-    DATABASE = 'dolist'
+    # 一定要设置的三个属性
+    DATABASE = ''
     USERNAME = 'root'
-    PASSWORD = 'qm167486'
+    PASSWORD = ''
 
     DB_URI = "{dl}+{dv}://{un}:{pw}@{host}:{port}/{db}?charset=utf8".format(dl=DIALECT,dv=DRIVER,un=USERNAME,pw=PASSWORD,host=HOST,port=PORT,db=DATABASE)
 
@@ -21,5 +22,5 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True #调试设置为true
 
-    #session加密钥匙,24个字符
+    #session加密钥匙,有且只有24个字符
     SECRET_KEY = '123456789012345678901234'
