@@ -38,18 +38,21 @@ def login():
             return redirect(url_for('default',bad='noUser'))
 
 # 注册
-@app.route('/register',methods=['POST'])
+@app.route('/register',methods=['POST','GET'])
 def register():
-    un = request.form.get('name')
-    pw = request.form.get('password')
-    res = User.query.filter(User.username==un).first()
-    if res:
-        return redirect(url_for('default',bad='haveUser'))
+    if request.method == 'GET':
+        return render_template("register.html")
     else:
-        user = User(username=un,password=pw)
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('default',bad='goodRegister'))
+        un = request.form.get('name')
+        pw = request.form.get('password')
+        res = User.query.filter(User.username==un).first()
+        if res:
+            return redirect(url_for('default',bad='haveUser'))
+        else:
+            user = User(username=un,password=pw)
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('default',bad='goodRegister'))
 
 # 新建任务
 @app.route('/newTask',methods=['POST','GET'])
@@ -80,12 +83,11 @@ def newTask():
 def deleteTask():
     u_id = session.get("userid")
     t_id = request.form.get('testId')
-    re_id = request.form.get('reid')
+    re_id = request.form.get('reId')
     task = Task.query.filter(Task.sender_id==u_id,Task.id==t_id).first()
     if task:
         results = User_task.query.filter(User_task.task_id==t_id,User_task.receiver_id==re_id).first()
         db.session.delete(results)
-        db.session.delete(task)
         db.session.commit()
         return redirect(url_for('taskFeedback'))
     else:
@@ -108,43 +110,12 @@ def todolist2():
     t = []
     u_id = session.get('userid')
     ut = User_task.query.filter(User_task.receiver_id==u_id).all()
-    # k = 0
     for r in ut:
         if r.finish_time:
             continue
         else:
-            # k = k+1
             task = Task.query.filter(Task.id==r.task_id).first()
-            sender = User.query.filter(User.id==task.sender_id).first()
-            i = {}
-            i['id'] = task.id
-            i['headline'] = task.headline
-            i['content'] = task.content
-            i['deadline'] = task.deadline.strftime('%Y-%m-%d')
-            i['createTime'] = task.creation_time.strftime('%Y-%m-%d')
-            i['sender'] = sender.username
-            est = r.estimated_time
-            if est:
-                i['est'] = est.strftime('%Y-%m-%d')
-            else:
-                i['est'] = est
-            t.append(i)
-    return render_template("mission.html",t=t)
-
-# 查看待办事项
-@app.route('/todolist1')
-def todolist1():
-    t = []
-    u_id = session.get('userid')
-    ut = User_task.query.filter(User_task.receiver_id==u_id).all()
-    # k = 0
-    for r in ut:
-        if r.finish_time:
-            continue
-        else:
-            # k = k+1
-            task = Task.query.filter(Task.id==r.task_id).first()
-            if int(task.deadline.strftime('%Y%m%d'))<=int(datetime.now().strftime('%Y%m%d')):
+            if task:
                 sender = User.query.filter(User.id==task.sender_id).first()
                 i = {}
                 i['id'] = task.id
@@ -159,6 +130,38 @@ def todolist1():
                 else:
                     i['est'] = est
                 t.append(i)
+            else:
+                continue
+    return render_template("mission.html",t=t)
+
+# 查看待办事项
+@app.route('/todolist1')
+def todolist1():
+    t = []
+    u_id = session.get('userid')
+    ut = User_task.query.filter(User_task.receiver_id==u_id).all()
+    for r in ut:
+        if r.finish_time:
+            continue
+        else:
+            task = Task.query.filter(Task.id==r.task_id).first()
+            if task:
+                if int(task.deadline.strftime('%Y%m%d'))<=int(datetime.now().strftime('%Y%m%d')):
+                    sender = User.query.filter(User.id==task.sender_id).first()
+                    i = {}
+                    i['id'] = task.id
+                    i['headline'] = task.headline
+                    i['content'] = task.content
+                    i['deadline'] = task.deadline.strftime('%Y-%m-%d')
+                    i['createTime'] = task.creation_time.strftime('%Y-%m-%d')
+                    i['sender'] = sender.username
+                    est = r.estimated_time
+                    if est:
+                        i['est'] = est.strftime('%Y-%m-%d')
+                    else:
+                        i['est'] = est
+                    t.append(i)
+                else: continue
     return render_template("mission.html",t=t)
 
 # 查看任务反馈
