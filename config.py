@@ -3,6 +3,10 @@ import os
 class Config(object):
     #设置了debug模式
     DEBUG = True
+    
+    #设置管理员账号
+    ADMINISTRATOR = ''
+    AD_PASSWORD = ''
 
     #MYSQL
     DIALECT = 'mysql'

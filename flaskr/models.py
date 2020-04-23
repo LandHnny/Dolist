@@ -7,6 +7,7 @@ class User(db.Model):
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     password = db.Column(db.Text,nullable=False)
     username = db.Column(db.Text,nullable=False)
+    status = db.Column(db.Integer,nullable=False)
 
 class Task(db.Model):
     __tablename__ = 'task'
@@ -25,21 +26,3 @@ class User_task(db.Model):
     finish_time = db.Column(db.DateTime,nullable=True)
     estimated_time = db.Column(db.DateTime,nullable=True)
 
-
-# res = [
-#         {
-#             id:
-#             headline
-#             content
-#             creation_time
-#             deadline
-#             receiver:[
-#                 {
-#                     reid
-#                     username
-#                     estimated_time
-#                     finish_time
-#                 }
-#             ]
-#         }
-#     ]

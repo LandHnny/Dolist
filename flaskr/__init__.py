@@ -15,7 +15,10 @@ db.create_all()
 @app.route('/')
 def index():
     un = session.get('username')
-    return render_template("index.html",username=un)
+    if un==Config.ADMINISTRATOR:
+        return render_template("ad.html",username=un)
+    else:
+        return render_template("index.html",username=un)
 
 # 登录
 @app.route('/login',methods=['POST','GET'])
@@ -28,12 +31,18 @@ def login():
         user = User.query.filter(User.username==un).first()
         if user:
             if pw == user.password:
+                if user.status == 0:
+                    return redirect(url_for('default',bad='noPower'))
                 session['userid'] = user.id
                 session['username'] = un
                 return redirect(url_for('index'))
             else:
                 return redirect(url_for('default',bad='falseUser'))
         else:
+            if un==Config.ADMINISTRATOR and pw==Config.AD_PASSWORD:
+                session['userid'] = -1
+                session['username'] = un
+                return redirect(url_for('index'))
             return redirect(url_for('default',bad='noUser'))
 
 # 注册
@@ -45,10 +54,10 @@ def register():
         un = request.form.get('name')
         pw = request.form.get('password')
         res = User.query.filter(User.username==un).first()
-        if res:
+        if res or un==Config.ADMINISTRATOR:
             return redirect(url_for('default',bad='haveUser'))
         else:
-            user = User(username=un,password=pw)
+            user = User(username=un,password=pw,status=1)
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('default',bad='goodRegister'))
@@ -57,9 +66,13 @@ def register():
 @app.route('/newTask',methods=['POST','GET'])
 def newTask():
     if request.method=='GET':
+        if session.get('userid')==-1:
+            return redirect(url_for('default',bad='ad'))
         users = User.query.filter().all()
         return render_template("newTask.html",users=users)
     else:
+        if session.get('userid')==-1:
+            return redirect(url_for('default',bad='ad'))
         re = request.form.getlist('receivers')
         dl = request.form.get('deadline')
         hl = request.form.get('headline')
@@ -80,17 +93,24 @@ def newTask():
 # 修改任务的预完成时间
 @app.route('/modifyET',methods=['POST','GET'])
 def modifyET():
+    if session.get('userid')==-1:
+        return redirect(url_for('default',bad='ad'))
     et = request.form.getlist('estimated_time')
-    t_id = request.form.get('testId')
-    u_id = session.get('userid')
-    user_task = User_task.query.filter(User_task.task_id==int(t_id),User_task.receiver_id==u_id).first()
-    user_task.estimated_time = et
-    db.session.commit()
-    return redirect(url_for('todolist2'))
+    if et != ['']:
+        t_id = request.form.get('testId')
+        u_id = session.get('userid')
+        user_task = User_task.query.filter(User_task.task_id==int(t_id),User_task.receiver_id==u_id).first()
+        user_task.estimated_time = et
+        db.session.commit()
+        return redirect(url_for('todolist2'))
+    else:
+        return redirect(url_for('default',bad='noEst'))
 
 # 查看待办事项
 @app.route('/todolist2')
 def todolist2():
+    if session.get('userid')==-1:
+        return redirect(url_for('default',bad='ad'))
     t = []
     u_id = session.get('userid')
     ut = User_task.query.filter(User_task.receiver_id==u_id).all()
@@ -154,7 +174,10 @@ def todolist1():
 def taskFeedback():
     res = []
     se_id = session.get('userid')
-    task = Task.query.filter(Task.sender_id==se_id).all()
+    if se_id==-1:
+        task = Task.query.filter().all()
+    else:
+        task = Task.query.filter(Task.sender_id==se_id).all()
     for t in task:
         u = {}
         u["id"] = t.id
@@ -183,15 +206,22 @@ def taskFeedback():
         res.append(u)
     return render_template("taskFeedback.html",t=res)
 
-# 统计图
-@app.route('/statistic',methods=['POST','GET'])
+@app.route('/statistic')
 def statistic():
+    return render_template("statistic.html")
+
+# 统计图
+@app.route('/echarts',methods=['POST'])
+def echarts():
     # 发送任务人的姓名,每个人给自己发送任务的数量
     users = []
     number = [] 
     res = []
     u_id = session.get('userid')
-    user_task = User_task.query.filter(User_task.receiver_id==u_id).all()
+    if u_id==-1:
+        user_task = User_task.query.filter().all()
+    else:
+        user_task = User_task.query.filter(User_task.receiver_id==u_id).all()
     for ut in user_task:
         task = Task.query.filter(Task.id==ut.task_id).first()
         user = User.query.filter(User.id==task.sender_id).first()
@@ -216,7 +246,11 @@ def statistic():
             "num":number[i]
         }
         res.append(r)
-    return render_template("statistic.html",res=res)
+    datas = {}
+    datas['data'] = res
+    print(datas)
+    print(jsonify(datas))
+    return jsonify(datas)
 
 # 注销登录
 @app.route('/logout')
@@ -233,6 +267,71 @@ def finish():
     ut.finish_time = datetime.now()
     db.session.commit()
     return redirect(url_for('todolist2'))
+
+# 删除任务
+@app.route('/deleteTask',methods=['POST'])
+def deleteTask():
+    t_id = request.form.get('testId')
+    u_id = session.get('userid')
+    if u_id == -1:
+        task = Task.query.filter(Task.id==t_id).first()
+    else:
+        task = Task.query.filter(Task.id==t_id,Task.sender_id==u_id).first()
+    if task:
+        user_task = User_task.query.filter(User_task.task_id==t_id).all()
+        if user_task:
+            for ut in user_task:
+                db.session.delete(ut)
+        db.session.delete(task)
+        db.session.commit()
+    return redirect(url_for('taskFeedback'))
+
+# 管理用户
+@app.route('/users')
+def users():
+    u_id = session.get('userid')
+    if u_id==-1:
+        user = User.query.filter().all()
+        t=[]
+        for i in user:
+            k={}
+            k['id']=i.id
+            k['username']=i.username
+            k['password']=i.password
+            k['status']=i.status
+            t.append(k)
+        return render_template("users.html",t=t)
+    else:
+        return redirect(url_for('default',bad='noPower'))
+
+# 删除用户
+@app.route('/deleteUser',methods=['POST'])
+def deleteUser():
+    id = request.form.get('id')
+    u_id = session.get('userid')
+    if u_id==-1:
+        user = User.query.filter(User.id==id).first()
+        db.session.delete(user)
+        db.session.commit()
+        return redirect(url_for('users'))
+    else:
+        return redirect(url_for('default',bad='noPower'))
+
+# 禁用用户
+@app.route('/modifyUStatus',methods=['POST'])
+def modifyUStatus():
+    id = request.form.get('id')
+    u_id = session.get('userid')
+    if u_id==-1:
+        user = User.query.filter(User.id==id).first()
+        if user.status==0:
+            user.status=1
+        else:  
+            user.status=0
+        db.session.commit()
+        return redirect(url_for('users'))
+    else:
+        return redirect(url_for('default',bad='noPower'))
 
 # 错误页面
 @app.route('/default')

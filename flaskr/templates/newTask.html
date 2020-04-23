@@ -27,41 +27,76 @@
     <link rel="stylesheet" href="/static/css/summernote.min.css">
 </head>
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">任务跟进系统</a>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">首页 <span class="sr-only"></span></a></li>
+              <li><a href="/newTask">创建任务 <span class="sr-only"></span></a></li>
+            </ul>
+  
+            <ul class="nav navbar-nav navbar-right nav-list">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户 <span class="caret"></span></a>
+                  <ul class="dropdown-menu admin-list">
+                    <li><a href="/todolist2" op="shop">代办事项</a></li>
+                    <li><a href="/taskFeedback" op="shop">任务反馈</a></li>
+                    <li><a href="logout" op="food">退出</a></li>
+                  </ul>
+                </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+      <!-- 顶部导航 -->
     <!-- 网页内容区 -->
-    <div class="content">
         <div class="container">
             <div class="row">
-                <h2>创建任务</h2>
-            </div>
-            <div class="row">
-                <form class="form-horizontal" action="/newTask" method="POST" onsubmit="return inputNull(this)">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h1>创建任务</h1>
+              </div>
+                <div class="panel-body" style="padding:5%;">
+                  <form class="form-horizontal" action="/newTask" method="POST" onsubmit="return inputNull(this)">
                     <div class="form-group">
                         <h4>接收对象</h4>
-                        {% for a in users %}
+                        <div class="well well-sm">
+                          {% for a in users %}
                             <div class="checkbox-inline">
                                 <lable class="control-label"><input type="checkbox"name="receivers" value={{a.id}} />{{a.username}}</lable>
                             </div>
                         {% endfor %}
+                        </div>
                     </div>
                       <div class="form-group">
+                        <h4>任务截止时间</h4>
                         <input type="date" class="form-control"  placeholder="任务截止时间" name="deadline" id="deadline">
                     </div>
                       <div class="form-group">
+                        <h4>任务标题和内容</h4>
                         <input type="text" class="form-control"  placeholder="任务标题" name="headline" id="headline">
                     </div>
                       <div class="form-group">
                         <textarea id="summernote" name="content"></textarea>
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-info summit">提交</button>
-                            <button type="button" class="btn btn-info" onclick="window.location.href = '/'">取消</button>
+                            <button class="btn btn-primary summit">提交</button>
+                            <button type="button" class="btn btn-danger" onclick="window.location.href = '/'">取消</button>
                         </div>
-
                   </form>
+                </div>
+              </div>
             </div>
-         
         </div>
-    </div>
     <!-- 网页内容区 -->
     
      <!-- js -->

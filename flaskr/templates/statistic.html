@@ -47,35 +47,147 @@
     </nav>
     <!-- 顶部导航 -->
 
-    <div class="content">
+    <div class="container">
         <div class="row">
-          <div class="col-md-2">任务发送人</div>
-          <div class="col-md-10">发送数量</div>
-          {% for r in res %}
-          <div class="col-md-2">{{r.name}}</div>
-          <div class="col-md-10">
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{r.num*100/res[0].num}}%;">
-                {{r.num}}
-              </div>
-            </div>
-          </div>
-          {% endfor %}
+          <div class="col-md-offset-2 col-md-8" id="main" style="width: 800px;height:800px;"></div>
         </div>
     </div>
   <!-- 网页内容区 -->
     <!-- js -->
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
-    <script>
-      function showMenu(menu)
-      {
-        $(".side-nav .side-box ."+menu).removeClass("btn-default");  
-        $(".side-nav .side-box ."+menu).addClass("btn-primary");
-        console.log(menu)
-      }
-      showMenu("statistic");
-      
-    </script>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('main'));
+      var dataAxis = [];
+      var data = [];
+      var yMax = 500;
+      var dataShadow = [];
+      $.ajax({
+         type : "post",
+//       async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+         url : "/echarts",    //请求发送到Servlet处
+//       data : {},
+        //  dataType : "json",        //返回数据形式为json
+         success : function(result) {
+             //请求成功时执行该函数内容，result即为服务器返回的json对象
+             if (result) {
+//           	alert(result["data"]);
+                    for(var i=0;i<result['data'].length;i++){
+//                  	alert(result["data"][i]["name"]);
+                        dataAxis.push(result['data'][i]["name"]);    //挨个取出名称并填入类别数组
+                     }
+                    for(var i=0;i<result['data'].length;i++){
+                          data.push(result['data'][i]["num"]);    //挨个取出数量并填入销量数组
+                      }
+                      yMax = result['data'][0]["num"]
+                    
+                    for (var i = 0; i < data.length; i++) {
+                      dataShadow.push(yMax);
+                    }
+
+
+option = {
+    title: {
+        text: '统计图',
+        subtext: ''
+    },
+    xAxis: {
+        data: dataAxis,
+        axisLabel: {
+            inside: true,
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+        z: 10
+    },
+    yAxis: {
+        axisLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#999'
+            }
+        }
+    },
+    dataZoom: [
+        {
+            type: 'inside'
+        }
+    ],
+    series: [
+        { // For shadow
+            type: 'bar',
+            itemStyle: {
+                color: 'rgba(0,0,0,0.05)'
+            },
+            barGap: '-100%',
+            barCategoryGap: '40%',
+            data: dataShadow,
+            animation: false
+        },
+        {
+            type: 'bar',
+            itemStyle: {
+                color: new echarts.graphic.LinearGradient(
+                    0, 0, 0, 1,
+                    [
+                        {offset: 0, color: '#83bff6'},
+                        {offset: 0.5, color: '#188df0'},
+                        {offset: 1, color: '#188df0'}
+                    ]
+                )
+            },
+            emphasis: {
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#2378f7'},
+                            {offset: 0.7, color: '#2378f7'},
+                            {offset: 1, color: '#83bff6'}
+                        ]
+                    )
+                }
+            },
+            data: data
+        }
+    ]
+};
+
+// Enable data zoom when user click bar.
+var zoomSize = 6;
+myChart.on('click', function (params) {
+    console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+    myChart.dispatchAction({
+        type: 'dataZoom',
+        startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+        endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+    });
+});
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+ 
+             }
+ 
+        },
+         error : function(errorMsg) {
+             //请求失败时执行该函数
+         alert("图表请求数据失败!");
+         myChart.hideLoading();
+         }
+    })
+  </script>
 </body>
 </html>
