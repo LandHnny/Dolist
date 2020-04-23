@@ -24,3 +24,22 @@ class User_task(db.Model):
     receiver_id = db.Column(db.Integer,nullable=False)
     finish_time = db.Column(db.DateTime,nullable=True)
     estimated_time = db.Column(db.DateTime,nullable=True)
+
+
+# res = [
+#         {
+#             id:
+#             headline
+#             content
+#             creation_time
+#             deadline
+#             receiver:[
+#                 {
+#                     reid
+#                     username
+#                     estimated_time
+#                     finish_time
+#                 }
+#             ]
+#         }
+#     ]

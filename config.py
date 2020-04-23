@@ -9,7 +9,7 @@ class Config(object):
     DRIVER = 'pymysql'
     HOST = '127.0.0.1'
     PORT = '3306'
-    # 一定要设置的三个属性
+    # 一定要设置的三个属性,设置完成后检查mysql的DATABASE是否存在且没有任何表
     DATABASE = ''
     USERNAME = 'root'
     PASSWORD = ''

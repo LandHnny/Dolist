@@ -7,30 +7,39 @@
     <link href="/static/css/default.css" rel="stylesheet">
 </head>
 <body>
-    {% if w=='goodRegister' %}
-    <p class="bg-success">注册成功</p>
-    <button type="button" class="btn btn-default"
-    onclick="window.location.href = '/login'">跳转至登录页面</button>
-    {% endif %}
-    {% if w=='haveUser' %}
-    <h1 class="bg-warning">用户名已存在</h1>
-    <button type="button" class="btn btn-default"
-        onclick="window.location.href = '/login'">跳转至登录页面</button>
-    {% endif %}
-    {% if w=='falseUser' %}
-    <h1 class="bg-danger">用户名与密码不匹配</h1>
-    <button type="button" class="btn btn-default"
-        onclick="window.location.href = '/login'">跳转至登录页面</button>
-    {% endif %}
-    {% if w=='noUser' %}
-    <h1 class="bg-danger">用户不存在，请检查用户名</h1>
-    <button type="button" class="btn btn-default"
-    onclick="window.location.href = '/login'">跳转至登录页面</button>
-    {% endif %}
-    {% if w=='nonono' %}
-    <h1 class="bg-danger">联系程序员</h1>
-    <button type="button" class="btn btn-default"
-    onclick="window.location.href = '/'">跳转某个页面</button>
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            {% if w=='goodRegister' %}
+            <div class="jumbotron">
+                <h1 align="center">注册成功!</h1>
+                <p align="center"><a class="btn btn-primary btn-lg" href="/login" role="button">跳转至登录页面</a></p>
+            </div>
+            {% endif %}
+            {% if w=='haveUser' %}
+            <div class="jumbotron">
+                <h1 align="center">用户名已存在</h1>
+                <p align="center"><a class="btn btn-primary btn-lg" href="/login" role="button">跳转至登录页面</a></p>
+            </div>
+            {% endif %}
+            {% if w=='falseUser' %}
+            <div class="jumbotron">
+                <h1 align="center">用户名与密码不匹配</h1>
+                <p align="center"><a class="btn btn-primary btn-lg" href="/login" role="button">跳转至登录页面</a></p>
+            </div>
+            {% endif %}
+            {% if w=='noUser' %}
+            <div class="jumbotron">
+                <h1 align="center">用户不存在，请检查用户名</h1>
+                <p align="center"><a class="btn btn-primary btn-lg" href="/login" role="button">跳转至登录页面</a></p>
+            </div>
+            {% endif %}
+            {% if w=='nonono' %}
+            <div class="jumbotron">
+                <h1 align="center">联系程序员</h1>
+                <p align="center"><a class="btn btn-primary btn-lg" href="/login" role="button">跳转至首页</a></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

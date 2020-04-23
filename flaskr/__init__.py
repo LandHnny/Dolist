@@ -77,21 +77,6 @@ def newTask():
             db.session.commit()
         return redirect(url_for('index'))
 
-# 删除任务
-@app.route('/deleteTask',methods=['POST'])
-def deleteTask():
-    u_id = session.get("userid")
-    t_id = request.form.get('testId')
-    re_id = request.form.get('reId')
-    task = Task.query.filter(Task.sender_id==u_id,Task.id==t_id).first()
-    if task:
-        results = User_task.query.filter(User_task.task_id==t_id,User_task.receiver_id==re_id).first()
-        db.session.delete(results)
-        db.session.commit()
-        return redirect(url_for('taskFeedback'))
-    else:
-        return redirect(url_for('taskFeedback'))
-
 # 修改任务的预完成时间
 @app.route('/modifyET',methods=['POST','GET'])
 def modifyET():
@@ -171,17 +156,19 @@ def taskFeedback():
     se_id = session.get('userid')
     task = Task.query.filter(Task.sender_id==se_id).all()
     for t in task:
+        u = {}
+        u["id"] = t.id
+        u["headline"] = t.headline
+        u["content"] = t.content
+        u["createTime"] = t.creation_time.strftime('%Y-%m-%d')
+        u["deadline"] = t.deadline.strftime('%Y-%m-%d')
+        u["receiver"] = []
         user_task = User_task.query.filter(User_task.task_id==t.id).all()
         for ut in user_task:
             user = User.query.filter(User.id==ut.receiver_id).first()
             k = {}
             k['reid'] = user.id
-            k['id'] = t.id
-            k['headline'] = t.headline
-            k['content'] = t.content
-            k['deadline'] = t.deadline.strftime('%Y-%m-%d')
-            k['receiver'] = user.username
-            k['createTime'] = t.creation_time.strftime('%Y-%m-%d')
+            k['username'] = user.username
             est = ut.estimated_time
             if est:
                 k['est'] = est.strftime('%Y-%m-%d')
@@ -192,7 +179,8 @@ def taskFeedback():
                 k['finishTime'] = ft.strftime('%Y-%m-%d')
             else:
                 k['finishTime'] = ft
-            res.append(k)
+            u["receiver"].append(k)
+        res.append(u)
     return render_template("taskFeedback.html",t=res)
 
 # 统计图
@@ -256,7 +244,6 @@ def default():
 def mybefore_request():
     if request.path == url_for('index') or \
         request.path == url_for('newTask') or \
-        request.path == url_for('deleteTask') or \
         request.path == url_for('modifyET') or \
         request.path == url_for('todolist1') or \
         request.path == url_for('todolist2') or \
