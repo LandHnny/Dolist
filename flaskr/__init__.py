@@ -311,6 +311,15 @@ def deleteUser():
     u_id = session.get('userid')
     if u_id==-1:
         user = User.query.filter(User.id==id).first()
+        task = Task.query.filter(Task.sender_id==id).all()
+        for t in task:
+            user_task = User_task.query.filter(User_task.task_id==t.id).all()
+            for ut in user_task:
+                db.session.delete(ut)
+            db.session.delete(t)
+        user_task = User_task.query.filter(User_task.receiver_id==id).all()
+        for ut in user_task:
+            db.session.delete(ut)
         db.session.delete(user)
         db.session.commit()
         return redirect(url_for('users'))

@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
     $(".content .panel .register").hide();
+    $("#1").show();
     $("#btn_newUser").click(function(){
         let text = $(this).text();
 

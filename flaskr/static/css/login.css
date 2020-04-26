@@ -4,10 +4,11 @@ a{
 }
 .content{
     width:100%;
-	background-image: url(../img/success.jpg);
-	background-size: cover;
+    /* background-image: url(../img/success.jpg); */
+    background-size: cover;
+    float: right;
+    
 }
-
 
 .content .panel{
     position: relative;
@@ -44,3 +45,24 @@ a{
     width:100%;
 }
 
+body {
+
+    background-image: url("../img/success.jpg");
+  
+    background-position: center 0;
+  
+    background-repeat: no-repeat;
+  
+    background-attachment: fixed;
+  
+    background-size: cover;
+  
+    -webkit-background-size: cover;
+  
+    -o-background-size: cover;
+  
+    -moz-background-size: cover;
+  
+    -ms-background-size: cover;
+  
+  }
