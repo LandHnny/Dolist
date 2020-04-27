@@ -25,15 +25,47 @@
     <script>
         function inputNull1(form)
         {
-            if(document.getElementById("re-account").value==""){
+            var password = document.getElementById("re-password").value;
+            var account = document.getElementById("re-account").value;
+            var rpassword = document.getElementById("re-rpassword").value;
+
+            if(account==""){
                 alert("您好！用户名不能为空");
                 return false;
             }
-            if(document.getElementById("re-password").value==""){
+            if(account.length > 20){
+                alert("您好！用户名不能超出20个字符");
+                return false;
+            }
+            if(!isNaN(account)){
+                alert("您好！用户名不能全为数字");
+                return false;
+            }
+            if(!isNaN(account[0])){
+                alert("您好！用户名不能以数字开头");
+                return false;
+            }
+            if(password==""){
                 alert("您好！密码不能为空");
                 return false;
             }
-            if(document.getElementById("re-rpassword").value!=document.getElementById("re-password").value){
+            if(password.length < 6){
+                alert("您好！密码不能小于6个字符");
+                return false;
+            }
+            if(/.*[\u4e00-\u9fa5]+.*$/.test(password)) {   
+                alert("您好！密码不能含有汉字！");   
+                return false;   
+            }   
+            if(!isNaN(password)){
+                alert("您好！密码不能全为数字");
+                return false;
+            }
+            if(/^[a-zA-Z]+$/.test(password)){
+                alert("您好！密码不能全为字母！");   
+                return false;  
+            }
+            if(rpassword!=password){
                 alert("您好！两次密码输入不匹配");
                 return false;
             }
